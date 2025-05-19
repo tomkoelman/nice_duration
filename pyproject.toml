@@ -16,12 +16,12 @@ classifiers = [
 ]
 license = "MIT"
 license-files = [ "LICENSE" ]
-dependencies = []
-
 
 [project.urls]
-Homepage = "https://github.com/tomkoelman/nice_duration"
-Issues = "https://github.com/tomkoelman/nice_duration/issues"
+homepage = "https://github.com/tomkoelman/nice_duration"
+source = "https://github.com/tomkoelman/nice_duration"
+repository = "https://github.com/tomkoelman/nice_duration.git"
+issues = "https://github.com/tomkoelman/nice_duration/issues"
 
 [dependency-groups]
 dev = [
