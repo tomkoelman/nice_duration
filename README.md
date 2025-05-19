@@ -20,7 +20,7 @@ changed to `3h12m0s`.
 For convenience, setting `keep_zeroes` to `True` will set all three
 `keep_*_zeroes` to `True`.
 
-** Examples
+## Examples
 ```python
 >>> from datetime import timedelta
 >>> from nice_duration import duration_string
