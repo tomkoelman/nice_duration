@@ -14,7 +14,8 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = [ "LICENSE" ]
 dependencies = []
 
 
