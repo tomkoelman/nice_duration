@@ -1,6 +1,5 @@
 from datetime import timedelta as td
 from nice_duration import duration_string as ds
-import pytest
 
 
 def test_empty_timedelta():
