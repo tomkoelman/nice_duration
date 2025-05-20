@@ -10,15 +10,14 @@ Setting `separator` to a single space changes the above example to
 `3h 12m`.
 
 Components with value 0 are left out. That can be changed by setting
- - `keep_leading_zeroes`
- - `keep_trailing_zeroes`
- - `keep_infix_zeroes`
+ - `leading_zeroes`
+ - `trailing_zeroes`
+ - `infix_zeroes`
 
-For example, by setting `keep_trailing_zeroes` to `True`, the example `duration_string` is
+For example, by setting `trailing_zeroes` to `True`, the example `duration_string` is
 changed to `3h12m0s`.
 
-For convenience, setting `keep_zeroes` to `True` will set all three
-`keep_*_zeroes` to `True`.
+For convenience, setting `all_zeroes` to `True` will set all three to `True`.
 
 ## Examples
 ```python
@@ -41,28 +40,28 @@ Setting `separator`:
 '3h 20m'
 ```
 
-Setting `keep_zeroes`:
+Setting `all_zeroes`:
 
 ```python
->>> duration_string(delta, keep_zeroes=True)
+>>> duration_string(delta, all_zeroes=True)
 '0w0d3h20m0s'
 ```
 
-Setting `keep_trailing_zeroes`:
+Setting `trailing_zeroes`:
 ```python
->>> duration_string(delta, keep_trailing_zeroes=True)
+>>> duration_string(delta, trailing_zeroes=True)
 '3h20m0s'
 ```
 
-Setting `keep_leading_zeroes`:
+Setting `leading_zeroes`:
 ```python
->>> duration_string(delta, keep_leading_zeroes=True)
+>>> duration_string(delta, leading_zeroes=True)
 '0w0d3h20m'
 ```
 
-Setting `keep_infix_zeroes`:
+Setting `infix_zeroes`:
 ```python
->>> duration_string(timedelta(hours=3, seconds=11), keep_infix_zeroes=True)
+>>> duration_string(timedelta(hours=3, seconds=11), infix_zeroes=True)
 '3h0m11s'
 ```
 

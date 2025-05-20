@@ -13,23 +13,23 @@ unit_names = {"week": "w", "day": "d", "hour": "h", "minute": "m", "second": "s"
 def duration_string(
     duration: timedelta | int,
     separator="",
-    keep_leading_zeroes=False,
-    keep_trailing_zeroes=False,
-    keep_infix_zeroes=False,
-    keep_zeroes=False,
+    leading_zeroes=False,
+    trailing_zeroes=False,
+    infix_zeroes=False,
+    all_zeroes=False,
 ) -> str:
     """Convert a timedelta object to a string.
 
     Examples:
     duration_string(timedelta(hours=3, minutes=20)) = "3h20m"
     duration_string(timedelta(hours=3, minutes=20), separator=" ") = "3h 20m"
-    duration_string(timedelta(hours=3, minutes=20), keep_zeroes=True) = "0w0d3h20m0s"
+    duration_string(timedelta(hours=3, minutes=20), all_zeroes=True) = "0w0d3h20m0s"
     """
 
-    if keep_zeroes:
-        keep_leading_zeroes = True
-        keep_infix_zeroes = True
-        keep_trailing_zeroes = True
+    if all_zeroes:
+        leading_zeroes = True
+        infix_zeroes = True
+        trailing_zeroes = True
 
     if type(duration) is int:
         remainder = duration
@@ -42,21 +42,21 @@ def duration_string(
         value, remainder = divmod(remainder, amount_of_seconds[field])
         values[field] = value
 
-    if not keep_leading_zeroes:
+    if not leading_zeroes:
         for field in values.copy():
             if values[field]:
                 break
             else:
                 del values[field]
 
-    if not keep_trailing_zeroes:
+    if not trailing_zeroes:
         for field in reversed(values.copy()):
             if values[field]:
                 break
             else:
                 del values[field]
 
-    if not keep_infix_zeroes and len(values) > 2:
+    if not infix_zeroes and len(values) > 2:
         # We transform the values dictionary to a list of pairs
         values_list = [[k, v] for k, v in values.items()]
 
