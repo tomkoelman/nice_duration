@@ -79,7 +79,7 @@ def duration_string(
         # Check whether there are enough elements left between leading
         # zeroes and trailing zeroes. If there are less than 3
         # elements beteen leading and trailing zeroes, we know for
-        # sure there are no in between zeroes.
+        # sure there are no infix zeroes.
         if len(values_list) - len(leading_zeroes) - len(trailing_zeroes) > 2:
             # Remove leading and trailing zeroes from values_list
             values_list = values_list[
@@ -89,7 +89,7 @@ def duration_string(
             # In this remaining list we can remove all zero values
             values_list = [e for e in values_list if e[1]]
 
-            # Now zeroes are removed, we re-attach leading and trailing zeroes
+            # Infix zeroes are removed. Now re-attach leading and trailing zeroes
             new_list = leading_zeroes
             new_list.extend(values_list)
             new_list.extend(trailing_zeroes)
