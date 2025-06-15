@@ -11,7 +11,7 @@ unit_names = {"week": "w", "day": "d", "hour": "h", "minute": "m", "second": "s"
 
 
 def duration_string(
-    duration: timedelta | int,
+    duration: timedelta | int | float,
     separator="",
     leading_zeroes=False,
     trailing_zeroes=False,
@@ -33,6 +33,8 @@ def duration_string(
 
     if type(duration) is int:
         remainder = duration
+    elif type(duration) is float:
+        remainder = int(duration)
     else:
         remainder = int(duration.total_seconds())
 
