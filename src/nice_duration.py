@@ -24,6 +24,8 @@ def duration_string(
     duration_string(timedelta(hours=3, minutes=20)) = "3h20m"
     duration_string(timedelta(hours=3, minutes=20), separator=" ") = "3h 20m"
     duration_string(timedelta(hours=3, minutes=20), all_zeroes=True) = "0w0d3h20m0s"
+    duration_string(131) = "2m11s"
+    duration_string(131.9) = "2m11s"
     """
 
     if all_zeroes:
