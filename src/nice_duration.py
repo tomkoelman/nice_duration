@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-amount_of_seconds = {
+SECONDS_PER_UNIT = {
     "week": 604800,
     "day": 86400,
     "hour": 3600,
@@ -47,8 +47,8 @@ def duration_string(
 
     values = {}
 
-    for field in amount_of_seconds.keys():
-        value, remainder = divmod(remainder, amount_of_seconds[field])
+    for field in SECONDS_PER_UNIT.keys():
+        value, remainder = divmod(remainder, SECONDS_PER_UNIT[field])
         values[field] = value
 
     if not leading_zeroes:
