@@ -29,25 +29,31 @@ For convenience, setting `all_zeroes` to `True` will set all three to `True`.
 '3h20m'
 ```
 
+`int` is interpreted as number of seconds
 ```python
 >>> duration_string(200) # When an int is given, it is interpreted as a number of seconds
 '3h20m'
 ```
 
+`float` is converted to `int` and interpreted as number of seconds
 ```python
->>> duration_string(200.3) # When a float is given, it is converted to an int and interpreted as a number of seconds
+>>> duration_string(200.3) 
 '3h20m'
 ```
 
-Setting `separator`:
+negative value
+```python
+>>> duration_string(-13) 
+'-13s'
+```
 
+Setting `separator`:
 ```python
 >>> duration_string(delta, separator=" ")
 '3h 20m'
 ```
 
 Setting `all_zeroes`:
-
 ```python
 >>> duration_string(delta, all_zeroes=True)
 '0w0d3h20m0s'
