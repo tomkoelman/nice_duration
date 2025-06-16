@@ -42,16 +42,17 @@ def duration_string(
         trailing_zeroes = True
 
     if isinstance(duration, int):
-        remainder = duration
+        total_seconds = duration
     elif isinstance(duration, float):
-        remainder = int(duration)
+        total_seconds = int(duration)
     else:
-        remainder = int(duration.total_seconds())
+        total_seconds = int(duration.total_seconds())
 
-    is_negative = remainder < 0
-    remainder = abs(remainder)
+    is_negative = total_seconds < 0
+    total_seconds = abs(total_seconds)
 
     values = {}
+    remainder = total_seconds
 
     for unit, seconds_per_unit in SECONDS_PER_UNIT.items():
         value, remainder = divmod(remainder, seconds_per_unit)
