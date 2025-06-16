@@ -7,7 +7,13 @@ SECONDS_PER_UNIT = {
     "minute": 60,
     "second": 1,
 }
-unit_names = {"week": "w", "day": "d", "hour": "h", "minute": "m", "second": "s"}
+UNIT_ABBREVIATIONS = {
+    "week": "w",
+    "day": "d",
+    "hour": "h",
+    "minute": "m",
+    "second": "s",
+}
 
 
 def duration_string(
@@ -109,7 +115,7 @@ def duration_string(
     if not values:
         values["second"] = 0
 
-    parts = [str(values[field]) + unit_names[field] for field in values]
+    parts = [str(values[field]) + UNIT_ABBREVIATIONS[field] for field in values]
     duration_string = separator.join(parts)
 
     if is_negative and duration_string != "0s":
