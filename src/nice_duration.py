@@ -24,7 +24,7 @@ def duration_string(
     infix_zeroes=False,
     all_zeroes=False,
 ) -> str:
-    """Convert a timedelta object to a string.
+    """Convert a timedelta object or numeric seconds to a human-readable string.
 
     Examples:
     duration_string(timedelta(hours=3, minutes=20)) = "3h20m"
