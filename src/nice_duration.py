@@ -115,7 +115,7 @@ def duration_string(
     if not values:
         values["second"] = 0
 
-    parts = [str(values[field]) + UNIT_ABBREVIATIONS[field] for field in values]
+    parts = [f"{value}{UNIT_ABBREVIATIONS[unit]}" for unit, value in values.items()]
     duration_string = separator.join(parts)
 
     if is_negative and duration_string != "0s":
