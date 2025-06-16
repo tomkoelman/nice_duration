@@ -1,8 +1,9 @@
 # nice_duration
 
 This is a Python module that introduces a way of formatting a
-`timedelta` instance like so: `3h12m`. It can also format an `int`
-representing a number of seconds in the same way.
+`timedelta` instance like so: `3h12m`. It can also format an `int` or
+a `float` representing a number of seconds in the same way. A `float`
+is just converted to an `int`, so `70.9` is converted to `70`.
 
 The `separator` parameter, which defaults to the empty string,
 determines what the individual components are concatenated with.
@@ -30,6 +31,11 @@ For convenience, setting `all_zeroes` to `True` will set all three to `True`.
 
 ```python
 >>> duration_string(200) # When an int is given, it is interpreted as a number of seconds
+'3h20m'
+```
+
+```python
+>>> duration_string(200.3) # When a float is given, it is converted to an int and interpreted as a number of seconds
 '3h20m'
 ```
 
