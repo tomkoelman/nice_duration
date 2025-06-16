@@ -53,9 +53,9 @@ def duration_string(
 
     values = {}
 
-    for field in SECONDS_PER_UNIT.keys():
-        value, remainder = divmod(remainder, SECONDS_PER_UNIT[field])
-        values[field] = value
+    for unit, seconds_per_unit in SECONDS_PER_UNIT.items():
+        value, remainder = divmod(remainder, seconds_per_unit)
+        values[unit] = value
 
     if not leading_zeroes:
         for field in values.copy():
