@@ -38,6 +38,9 @@ def duration_string(
     else:
         remainder = int(duration.total_seconds())
 
+    is_negative = remainder < 0
+    remainder = abs(remainder)
+
     values = {}
 
     for field in amount_of_seconds.keys():
@@ -102,9 +105,10 @@ def duration_string(
     if not values:
         values["second"] = 0
 
-    string = ""
-    for field in values:
-        string += separator + str(values[field]) + unit_names[field]
+    parts = [str(values[field]) + unit_names[field] for field in values]
+    duration_string = separator.join(parts)
 
-    string = string[len(separator) :]
-    return string
+    if is_negative and duration_string != "0s":
+        duration_string = "-" + duration_string
+
+    return duration_string
