@@ -31,9 +31,9 @@ def duration_string(
         infix_zeroes = True
         trailing_zeroes = True
 
-    if type(duration) is int:
+    if isinstance(duration, int):
         remainder = duration
-    elif type(duration) is float:
+    elif isinstance(duration, float):
         remainder = int(duration)
     else:
         remainder = int(duration.total_seconds())
