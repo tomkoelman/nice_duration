@@ -41,12 +41,10 @@ def duration_string(
         infix_zeroes = True
         trailing_zeroes = True
 
-    if isinstance(duration, int):
-        total_seconds = duration
-    elif isinstance(duration, float):
-        total_seconds = int(duration)
-    else:
+    if isinstance(duration, timedelta):
         total_seconds = int(duration.total_seconds())
+    else:
+        total_seconds = int(duration)
 
     is_negative = total_seconds < 0
     total_seconds = abs(total_seconds)
