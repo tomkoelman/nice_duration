@@ -57,19 +57,23 @@ def duration_string(
         values[unit] = value
 
     if not leading_zeroes:
-        for field in values.copy():
-            if values[field]:
+        # Remove all values that are 0 from the beginning of the values dict
+        for unit, value in values.copy().items():
+            if value:
                 break
             else:
-                del values[field]
+                del values[unit]
 
     if not trailing_zeroes:
-        for field in reversed(values.copy()):
-            if values[field]:
+        # Remove all values that are 0 from the end of the values dict
+        for unit, value in reversed(values.copy().items()):
+            if value:
                 break
             else:
-                del values[field]
+                del values[unit]
 
+    # Removing infix zeroes only makes sense when there are more than
+    # 2 values left
     if not infix_zeroes and len(values) > 2:
         # We transform the values dictionary to a list of pairs
         values_list = [[k, v] for k, v in values.items()]
@@ -87,13 +91,14 @@ def duration_string(
         for e in reversed(values_list):
             if e[1]:
                 break
-            else:
-                trailing_zeroes.insert(0, e)
+        else:
+            trailing_zeroes.insert(0, e)
 
         # Check whether there are enough elements left between leading
         # zeroes and trailing zeroes. If there are less than 3
         # elements beteen leading and trailing zeroes, we know for
-        # sure there are no infix zeroes.
+        # sure there are no infix zeroes, because an infix zero needs
+        # values on both sides.
         if len(values_list) - len(leading_zeroes) - len(trailing_zeroes) > 2:
             # Remove leading and trailing zeroes from values_list
             values_list = values_list[
