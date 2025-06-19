@@ -106,9 +106,7 @@ def duration_string(
             values_list = [e for e in values_list if e[1]]
 
             # Infix zeroes are removed. Now re-attach leading and trailing zeroes
-            new_list = leading_zeroes
-            new_list.extend(values_list)
-            new_list.extend(trailing_zeroes)
+            new_list = leading_zeroes + values_list + trailing_zeroes
 
             # We convert the list of pairs back to a dictionary
             values = {e[0]: e[1] for e in new_list}
