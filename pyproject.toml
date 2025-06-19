@@ -18,8 +18,6 @@ license = "MIT"
 license-files = [ "LICENSE" ]
 
 [project.urls]
-homepage = "https://github.com/tomkoelman/nice_duration"
-source = "https://github.com/tomkoelman/nice_duration"
 repository = "https://github.com/tomkoelman/nice_duration.git"
 issues = "https://github.com/tomkoelman/nice_duration/issues"
 
