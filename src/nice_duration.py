@@ -44,48 +44,43 @@ def _keep_specified_zeroes(
                 del values[unit]
 
     # Removing infix zeroes only makes sense when there are more than
-    # 2 values left
-    if not infix_zeroes and len(values) > 2:
-        # We transform the values dictionary to a list of pairs
-        values_list = [[k, v] for k, v in values.items()]
+    # 2 values left, if not we're done
+    if infix_zeroes or len(values) <= 2:
+        return values
 
-        # We split off potential leading zeroes
-        leading_zeroes = []
-        for e in values_list:
-            if e[1]:
-                break
-            else:
-                leading_zeroes.append(e)
+    # We split off potential leading zeroes
+    leading = {}
+    for unit, value in values.items():
+        if value:
+            break
+        else:
+            leading[unit] = value
 
-        # We split off potential trailing zeroes
-        trailing_zeroes = []
-        for e in reversed(values_list):
-            if e[1]:
-                break
-            else:
-                trailing_zeroes.insert(0, e)
+    # We split off potential trailing zeroes
+    trailing = {}
+    for unit, value in reversed(values.items()):
+        if value:
+            break
+        else:
+            trailing[unit] = value
 
-        # Check whether there are enough elements left between leading
-        # zeroes and trailing zeroes. If there are less than 3
-        # elements beteen leading and trailing zeroes, we know for
-        # sure there are no infix zeroes, because an infix zero needs
-        # values on both sides.
-        if len(values_list) - len(leading_zeroes) - len(trailing_zeroes) > 2:
-            # Remove leading and trailing zeroes from values_list
-            values_list = values_list[
-                len(leading_zeroes) : len(values_list) - len(trailing_zeroes)
-            ]
+    # Check whether there are enough elements left between leading
+    # zeroes and trailing zeroes. If there are less than 3 elements
+    # beteen leading and trailing zeroes, we know for sure there are
+    # no infix zeroes, because an infix zero needs values on both
+    # sides (otherwise it is not infix).
+    if len(values) - len(leading) - len(trailing) <= 2:
+        return values
 
-            # In this remaining list we can remove all zero values
-            values_list = [e for e in values_list if e[1]]
+    # Remove leading and trailing zeroes from values
+    for unit in leading | trailing:
+        del values[unit]
 
-            # Infix zeroes are removed. Now re-attach leading and trailing zeroes
-            new_list = leading_zeroes + values_list + trailing_zeroes
+    # From this remaining dict we can remove all zero values
+    values = {u: v for (u, v) in values.items() if v}
 
-            # We convert the list of pairs back to a dictionary
-            return {e[0]: e[1] for e in new_list}
-
-    return values
+    # Infix zeroes are removed. Now re-attach leading and trailing zeroes
+    return leading | values | dict(reversed(trailing.items()))
 
 
 def duration_string(
