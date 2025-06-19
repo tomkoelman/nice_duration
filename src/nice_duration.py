@@ -35,7 +35,6 @@ def _keep_specified_zeroes(
 
     if not trailing_zeroes:
         # Remove all values that are 0 from the end of the values dict
-        print("remove trailers")
         for unit, value in reversed(values.copy().items()):
             if value:
                 break
