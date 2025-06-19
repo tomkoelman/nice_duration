@@ -16,6 +16,77 @@ UNIT_ABBREVIATIONS = {
 }
 
 
+def _apply_zero_logic(
+    values, leading_zeroes=False, trailing_zeroes=False, infix_zeroes=False
+):
+    """Given a values dict, which is an ordered mapping from unit to
+    amount, return a values dict that has leading zeroes removed (if
+    requested), trailing zeroes removed (if requested) and infix
+    zeroes remove (if requested).
+    """
+
+    if not leading_zeroes:
+        # Remove all values that are 0 from the beginning of the values dict
+        for unit, value in values.copy().items():
+            if value:
+                break
+            else:
+                del values[unit]
+
+    if not trailing_zeroes:
+        # Remove all values that are 0 from the end of the values dict
+        print("remove trailers")
+        for unit, value in reversed(values.copy().items()):
+            if value:
+                break
+            else:
+                del values[unit]
+
+    # Removing infix zeroes only makes sense when there are more than
+    # 2 values left
+    if not infix_zeroes and len(values) > 2:
+        # We transform the values dictionary to a list of pairs
+        values_list = [[k, v] for k, v in values.items()]
+
+        # We split off potential leading zeroes
+        leading_zeroes = []
+        for e in values_list:
+            if e[1]:
+                break
+            else:
+                leading_zeroes.append(e)
+
+        # We split off potential trailing zeroes
+        trailing_zeroes = []
+        for e in reversed(values_list):
+            if e[1]:
+                break
+            else:
+                trailing_zeroes.insert(0, e)
+
+        # Check whether there are enough elements left between leading
+        # zeroes and trailing zeroes. If there are less than 3
+        # elements beteen leading and trailing zeroes, we know for
+        # sure there are no infix zeroes, because an infix zero needs
+        # values on both sides.
+        if len(values_list) - len(leading_zeroes) - len(trailing_zeroes) > 2:
+            # Remove leading and trailing zeroes from values_list
+            values_list = values_list[
+                len(leading_zeroes) : len(values_list) - len(trailing_zeroes)
+            ]
+
+            # In this remaining list we can remove all zero values
+            values_list = [e for e in values_list if e[1]]
+
+            # Infix zeroes are removed. Now re-attach leading and trailing zeroes
+            new_list = leading_zeroes + values_list + trailing_zeroes
+
+            # We convert the list of pairs back to a dictionary
+            return {e[0]: e[1] for e in new_list}
+
+    return values
+
+
 def duration_string(
     duration: timedelta | int | float,
     separator="",
@@ -56,63 +127,12 @@ def duration_string(
         value, remainder = divmod(remainder, seconds_per_unit)
         values[unit] = value
 
-    if not leading_zeroes:
-        # Remove all values that are 0 from the beginning of the values dict
-        for unit, value in values.copy().items():
-            if value:
-                break
-            else:
-                del values[unit]
-
-    if not trailing_zeroes:
-        # Remove all values that are 0 from the end of the values dict
-        for unit, value in reversed(values.copy().items()):
-            if value:
-                break
-            else:
-                del values[unit]
-
-    # Removing infix zeroes only makes sense when there are more than
-    # 2 values left
-    if not infix_zeroes and len(values) > 2:
-        # We transform the values dictionary to a list of pairs
-        values_list = [[k, v] for k, v in values.items()]
-
-        # We split off potential leading zeroes
-        leading_zeroes = []
-        for e in values_list:
-            if e[1]:
-                break
-            else:
-                leading_zeroes.append(e)
-
-        # We split off potential trailing zeroes
-        trailing_zeroes = []
-        for e in reversed(values_list):
-            if e[1]:
-                break
-        else:
-            trailing_zeroes.insert(0, e)
-
-        # Check whether there are enough elements left between leading
-        # zeroes and trailing zeroes. If there are less than 3
-        # elements beteen leading and trailing zeroes, we know for
-        # sure there are no infix zeroes, because an infix zero needs
-        # values on both sides.
-        if len(values_list) - len(leading_zeroes) - len(trailing_zeroes) > 2:
-            # Remove leading and trailing zeroes from values_list
-            values_list = values_list[
-                len(leading_zeroes) : len(values_list) - len(trailing_zeroes)
-            ]
-
-            # In this remaining list we can remove all zero values
-            values_list = [e for e in values_list if e[1]]
-
-            # Infix zeroes are removed. Now re-attach leading and trailing zeroes
-            new_list = leading_zeroes + values_list + trailing_zeroes
-
-            # We convert the list of pairs back to a dictionary
-            values = {e[0]: e[1] for e in new_list}
+    values = _apply_zero_logic(
+        values,
+        leading_zeroes=leading_zeroes,
+        trailing_zeroes=trailing_zeroes,
+        infix_zeroes=infix_zeroes,
+    )
 
     if not values:
         values["second"] = 0

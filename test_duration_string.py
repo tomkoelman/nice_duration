@@ -1,5 +1,6 @@
 from datetime import timedelta as td
 from nice_duration import duration_string as ds
+from nice_duration import _apply_zero_logic as _azl
 
 
 def test_empty_timedelta():
@@ -44,3 +45,40 @@ def test_call_with_number_of_seconds_float():
 def test_call_with_negative_number():
     assert ds(-61) == "-1m1s"
     assert ds(-0) == "0s"
+
+
+def test_apply_zero_logic():
+    assert _azl({"week": 0, "hour": 1, "minute": 1}) == {
+        "hour": 1,
+        "minute": 1,
+    }
+    assert _azl({"week": 0, "hour": 1, "minute": 1}, leading_zeroes=True) == {
+        "week": 0,
+        "hour": 1,
+        "minute": 1,
+    }
+    assert _azl({"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}) == {"b": 1, "e": 1}
+    assert _azl(
+        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}, leading_zeroes=True
+    ) == {"a": 0, "b": 1, "e": 1}
+    assert _azl(
+        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}, trailing_zeroes=True
+    ) == {"b": 1, "e": 1, "f": 0}
+    assert _azl(
+        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}, infix_zeroes=True
+    ) == {"b": 1, "c": 0, "d": 0, "e": 1}
+    assert _azl(
+        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0},
+        leading_zeroes=True,
+        infix_zeroes=True,
+    ) == {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1}
+    assert _azl(
+        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0},
+        trailing_zeroes=True,
+        infix_zeroes=True,
+    ) == {"b": 1, "c": 0, "d": 0, "e": 1, "f": 0}
+    assert _azl(
+        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0},
+        trailing_zeroes=True,
+        leading_zeroes=True,
+    ) == {"a": 0, "b": 1, "e": 1, "f": 0}
