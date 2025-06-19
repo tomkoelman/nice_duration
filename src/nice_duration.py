@@ -25,6 +25,8 @@ def _keep_specified_zeroes(
     zeroes remove (if requested).
     """
 
+    values = values.copy()
+
     if not leading_zeroes:
         # Remove all values that are 0 from the beginning of the values dict
         for unit, value in values.copy().items():
