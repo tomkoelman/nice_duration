@@ -16,7 +16,7 @@ UNIT_ABBREVIATIONS = {
 }
 
 
-def _apply_zero_logic(
+def _keep_specified_zeroes(
     values, leading_zeroes=False, trailing_zeroes=False, infix_zeroes=False
 ):
     """Given a values dict, which is an ordered mapping from unit to
@@ -127,7 +127,7 @@ def duration_string(
         value, remainder = divmod(remainder, seconds_per_unit)
         values[unit] = value
 
-    values = _apply_zero_logic(
+    values = _keep_specified_zeroes(
         values,
         leading_zeroes=leading_zeroes,
         trailing_zeroes=trailing_zeroes,

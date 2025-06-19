@@ -1,6 +1,6 @@
 from datetime import timedelta as td
 from nice_duration import duration_string as ds
-from nice_duration import _apply_zero_logic as _azl
+from nice_duration import _keep_specified_zeroes as _ks0
 
 
 def test_empty_timedelta():
@@ -48,36 +48,36 @@ def test_call_with_negative_number():
 
 
 def test_apply_zero_logic():
-    assert _azl({"week": 0, "hour": 1, "minute": 1}) == {
+    assert _ks0({"week": 0, "hour": 1, "minute": 1}) == {
         "hour": 1,
         "minute": 1,
     }
-    assert _azl({"week": 0, "hour": 1, "minute": 1}, leading_zeroes=True) == {
+    assert _ks0({"week": 0, "hour": 1, "minute": 1}, leading_zeroes=True) == {
         "week": 0,
         "hour": 1,
         "minute": 1,
     }
-    assert _azl({"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}) == {"b": 1, "e": 1}
-    assert _azl(
+    assert _ks0({"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}) == {"b": 1, "e": 1}
+    assert _ks0(
         {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}, leading_zeroes=True
     ) == {"a": 0, "b": 1, "e": 1}
-    assert _azl(
+    assert _ks0(
         {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}, trailing_zeroes=True
     ) == {"b": 1, "e": 1, "f": 0}
-    assert _azl(
+    assert _ks0(
         {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}, infix_zeroes=True
     ) == {"b": 1, "c": 0, "d": 0, "e": 1}
-    assert _azl(
+    assert _ks0(
         {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0},
         leading_zeroes=True,
         infix_zeroes=True,
     ) == {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1}
-    assert _azl(
+    assert _ks0(
         {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0},
         trailing_zeroes=True,
         infix_zeroes=True,
     ) == {"b": 1, "c": 0, "d": 0, "e": 1, "f": 0}
-    assert _azl(
+    assert _ks0(
         {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0},
         trailing_zeroes=True,
         leading_zeroes=True,
