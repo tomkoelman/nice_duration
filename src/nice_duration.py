@@ -1,18 +1,11 @@
 from datetime import timedelta
 
-SECONDS_PER_UNIT = {
-    "week": 604800,
-    "day": 86400,
-    "hour": 3600,
-    "minute": 60,
-    "second": 1,
-}
-UNIT_ABBREVIATIONS = {
-    "week": "w",
-    "day": "d",
-    "hour": "h",
-    "minute": "m",
-    "second": "s",
+UNITS = {
+    "week": {"abbreviation": "w", "seconds_per_unit": 7 * 24 * 60 * 60},
+    "day": {"abbreviation": "d", "seconds_per_unit": 24 * 60 * 60},
+    "hour": {"abbreviation": "h", "seconds_per_unit": 60 * 60},
+    "minute": {"abbreviation": "m", "seconds_per_unit": 60},
+    "second": {"abbreviation": "s", "seconds_per_unit": 1},
 }
 
 
@@ -102,8 +95,8 @@ def duration_string(
     values = []
     remainder = total_seconds
 
-    for unit, seconds_per_unit in SECONDS_PER_UNIT.items():
-        value, remainder = divmod(remainder, seconds_per_unit)
+    for unit, unit_info in UNITS.items():
+        value, remainder = divmod(remainder, unit_info["seconds_per_unit"])
         values.append([unit, value])
 
     values = _keep_specified_zeroes(
@@ -113,7 +106,7 @@ def duration_string(
         infix_zeroes=infix_zeroes,
     )
 
-    parts = [f"{e[1]}{UNIT_ABBREVIATIONS[e[0]]}" for e in values]
+    parts = [f"{e[1]}{UNITS[e[0]]['abbreviation']}" for e in values]
     duration_string = separator.join(parts)
 
     if is_negative and duration_string != "0s":
