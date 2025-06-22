@@ -19,6 +19,7 @@ def test_ms_in_timedelta():
 def test_empty_timedelta():
     delta = td(seconds=0)
     assert ds(delta) == "0s"
+    assert ds(delta, precision="hours") == "0h"
     assert ds(delta, all_zeroes=True) == "0w0d0h0m0s"
 
 
