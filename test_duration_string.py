@@ -1,6 +1,19 @@
 from datetime import timedelta as td
 from nice_duration import duration_string as ds
 from nice_duration import _keep_specified_zeroes as _ks0
+import pytest
+
+
+def test_input_validation():
+    with pytest.raises(TypeError):
+        ds("invalid")
+    with pytest.raises(TypeError):
+        ds([1, 2, 3])
+
+
+def test_ms_in_timedelta():
+    delta = td(seconds=13, microseconds=12)
+    assert ds(delta) == "13s"
 
 
 def test_empty_timedelta():

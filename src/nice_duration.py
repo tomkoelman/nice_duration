@@ -81,6 +81,11 @@ def duration_string(
     duration_string(timedelta(seconds=-75)) = "-1m15s"
     """
 
+    if not isinstance(duration, (timedelta, int, float)):
+        raise TypeError(
+            f"Expected timedelta, int, or float, got {type(duration).__name__}"
+        )
+
     if all_zeroes:
         leading_zeroes = True
         infix_zeroes = True
