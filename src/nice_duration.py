@@ -51,8 +51,12 @@ def _keep_specified_zeroes(
     if not infix_zeroes:
         infix = [e for e in infix if e[1]]
 
-    # Return what's left
-    return leading + infix + trailing
+    values = leading + infix + trailing
+
+    if len(values) == 0:
+        values = [["second", 0]]
+
+    return values
 
 
 def duration_string(
@@ -101,9 +105,6 @@ def duration_string(
         trailing_zeroes=trailing_zeroes,
         infix_zeroes=infix_zeroes,
     )
-
-    if not values:
-        values = [["second", 0]]
 
     parts = [f"{e[1]}{UNIT_ABBREVIATIONS[e[0]]}" for e in values]
     duration_string = separator.join(parts)
