@@ -28,14 +28,13 @@ For convenience, setting `all_zeroes` to `True` will set all three to `True`.
 ```python
 >>> from datetime import timedelta
 >>> from nice_duration import duration_string
->>> delta = timedelta(hours=3, minutes=20)
->>> duration_string(delta)
+>>> duration_string(timedelta(hours=3, minutes=20))
 '3h20m'
 ```
 
 `int` is interpreted as number of seconds
 ```python
->>> duration_string(200) # When an int is given, it is interpreted as a number of seconds
+>>> duration_string(200) 
 '3h20m'
 ```
 
@@ -53,25 +52,25 @@ negative value
 
 Setting `separator`:
 ```python
->>> duration_string(delta, separator=" ")
+>>> duration_string(timedelta(hours=3, minutes=20), separator=" ")
 '3h 20m'
 ```
 
 Setting `all_zeroes`:
 ```python
->>> duration_string(delta, all_zeroes=True)
+>>> duration_string(timedelta(hours=3, minutes=20), all_zeroes=True)
 '0w0d3h20m0s'
 ```
 
 Setting `trailing_zeroes`:
 ```python
->>> duration_string(delta, trailing_zeroes=True)
+>>> duration_string(timedelta(hours=3, minutes=20), trailing_zeroes=True)
 '3h20m0s'
 ```
 
 Setting `leading_zeroes`:
 ```python
->>> duration_string(delta, leading_zeroes=True)
+>>> duration_string(timedelta(hours=3, minutes=20), leading_zeroes=True)
 '0w0d3h20m'
 ```
 
