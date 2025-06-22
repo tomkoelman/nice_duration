@@ -10,15 +10,19 @@ determines what the individual components are concatenated with.
 Setting `separator` to a single space changes the above example to
 `3h 12m`.
 
-Components with value 0 are left out. That can be changed by setting
- - `leading_zeroes`
- - `trailing_zeroes`
- - `infix_zeroes`
+Components with value 0 are left out. That can be changed by specifying
+ - `leading_zeroes`: set to `True` to keep the leading zeroes 
+ - `trailing_zeroes`: set to `True` to keep the trailing zeroes
+ - `infix_zeroes`: set to `True` to keep the zeroes between values 
 
 For example, by setting `trailing_zeroes` to `True`, the example `duration_string` is
 changed to `3h12m0s`.
 
 For convenience, setting `all_zeroes` to `True` will set all three to `True`.
+
+## Limitations
+- No sub-second precision
+- Maximum unit is weeks (because bigger units have no fixed length)
 
 ## Examples
 ```python
@@ -35,7 +39,7 @@ For convenience, setting `all_zeroes` to `True` will set all three to `True`.
 '3h20m'
 ```
 
-`float` is converted to `int` and interpreted as number of seconds
+`float` is truncated to `int` and interpreted as a whole number of seconds
 ```python
 >>> duration_string(200.3) 
 '3h20m'
