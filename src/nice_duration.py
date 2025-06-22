@@ -1,11 +1,13 @@
 from datetime import timedelta
 
 UNITS = {
-    "week": {"abbreviation": "w", "seconds_per_unit": 7 * 24 * 60 * 60},
-    "day": {"abbreviation": "d", "seconds_per_unit": 24 * 60 * 60},
-    "hour": {"abbreviation": "h", "seconds_per_unit": 60 * 60},
-    "minute": {"abbreviation": "m", "seconds_per_unit": 60},
-    "second": {"abbreviation": "s", "seconds_per_unit": 1},
+    "weeks": {"abbreviation": "w", "μs_per_unit": 7 * 24 * 60 * 60 * 1000 * 1000},
+    "days": {"abbreviation": "d", "μs_per_unit": 24 * 60 * 60 * 1000 * 1000},
+    "hours": {"abbreviation": "h", "μs_per_unit": 60 * 60 * 1000 * 1000},
+    "minutes": {"abbreviation": "m", "μs_per_unit": 60 * 1000 * 1000},
+    "seconds": {"abbreviation": "s", "μs_per_unit": 1000 * 1000},
+    "milliseconds": {"abbreviation": "ms", "μs_per_unit": 1000},
+    "microseconds": {"abbreviation": "μs", "μs_per_unit": 1},
 }
 
 
@@ -44,21 +46,20 @@ def _keep_specified_zeroes(
     if not infix_zeroes:
         infix = [e for e in infix if e[1]]
 
-    values = leading + infix + trailing
-
-    if len(values) == 0:
-        values = [["second", 0]]
-
-    return values
+    return leading + infix + trailing
 
 
 def duration_string(
-    duration: timedelta | int | float,
+    duration: timedelta = None,
+    seconds: int | float = None,
+    milliseconds: int | float = None,
+    microseconds: int | float = None,
     separator="",
     leading_zeroes=False,
     trailing_zeroes=False,
     infix_zeroes=False,
     all_zeroes=False,
+    precision="seconds",
 ) -> str:
     """Convert a timedelta object or numeric seconds to a human-readable string.
 
@@ -68,36 +69,76 @@ def duration_string(
     duration_string(timedelta(hours=3, minutes=20)) = "3h20m"
     duration_string(timedelta(hours=3, minutes=20), separator=" ") = "3h 20m"
     duration_string(timedelta(hours=3, minutes=20), all_zeroes=True) = "0w0d3h20m0s"
-    duration_string(131) = "2m11s"
-    duration_string(131.9) = "2m11s"
-    duration_string(-131) = "-2m11s"
+    duration_string(timedelta(hours=3, minutes=20), precision="hours") = "3h"
+    duration_string(seconds=131) = "2m11s"
+    duration_string(seconds=131.9) = "2m11s"
+    duration_string(seconds=-131) = "-2m11s"
     duration_string(timedelta(seconds=-75)) = "-1m15s"
     """
 
-    if not isinstance(duration, (timedelta, int, float)):
+    if duration and not isinstance(duration, timedelta):
         raise TypeError(
-            f"Expected timedelta, int, or float, got {type(duration).__name__}"
+            f"Expected timedelta for duration, got {type(duration).__name__}"
         )
+
+    if seconds and not isinstance(seconds, (int, float)):
+        raise TypeError(
+            f"Expected int or float for seconds, got {type(seconds).__name__}"
+        )
+
+    if milliseconds and not isinstance(milliseconds, (int, float)):
+        raise TypeError(
+            f"Expected int or float for milliseconds, got {type(milliseconds).__name__}"
+        )
+
+    if microseconds and not isinstance(microseconds, (int, float)):
+        raise TypeError(
+            f"Expected int or float for microseconds, got {type(microseconds).__name__}"
+        )
+
+    amount_of_durations = len(
+        [p for p in [duration, seconds, milliseconds, microseconds] if p]
+    )
+    if amount_of_durations == 0:
+        raise TypeError(
+            "Expected one of duration, seconds, milliseconds of microseconds to have a value."
+        )
+
+    if amount_of_durations > 1:
+        raise TypeError(
+            "Expected only one of duration, seconds, milliseconds of microseconds to have a value."
+        )
+
+    if precision not in UNITS:
+        raise TypeError(f"Expected precision to be one of {', '.join(UNITS)}.")
 
     if all_zeroes:
         leading_zeroes = True
         infix_zeroes = True
         trailing_zeroes = True
 
-    if isinstance(duration, timedelta):
-        total_seconds = int(duration.total_seconds())
+    if duration:
+        total_microseconds = int(duration.total_seconds()) * 1000 * 1000 + int(
+            duration.microseconds
+        )
+    elif seconds:
+        total_microseconds = int(seconds * 1000 * 1000)
+    elif milliseconds:
+        total_microseconds = int(milliseconds * 1000)
     else:
-        total_seconds = int(duration)
+        total_microseconds = microseconds
 
-    is_negative = total_seconds < 0
-    total_seconds = abs(total_seconds)
+    is_negative = total_microseconds < 0
+    total_microseconds = abs(total_microseconds)
 
     values = []
-    remainder = total_seconds
+    remainder = total_microseconds
 
     for unit, unit_info in UNITS.items():
-        value, remainder = divmod(remainder, unit_info["seconds_per_unit"])
+        value, remainder = divmod(remainder, unit_info["μs_per_unit"])
         values.append([unit, value])
+        if unit == precision:
+            break
 
     values = _keep_specified_zeroes(
         values,
@@ -105,6 +146,9 @@ def duration_string(
         trailing_zeroes=trailing_zeroes,
         infix_zeroes=infix_zeroes,
     )
+
+    if len(values) == 0:
+        values = [[precision, 0]]
 
     parts = [f"{e[1]}{UNITS[e[0]]['abbreviation']}" for e in values]
     duration_string = separator.join(parts)
