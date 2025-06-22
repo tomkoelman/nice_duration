@@ -69,6 +69,8 @@ def duration_string(
 ) -> str:
     """Convert a timedelta object or numeric seconds to a human-readable string.
 
+    When `duration` is a float, it is truncated to an `int`.
+
     Examples:
     duration_string(timedelta(hours=3, minutes=20)) = "3h20m"
     duration_string(timedelta(hours=3, minutes=20), separator=" ") = "3h 20m"
