@@ -48,17 +48,17 @@ def test_keeping_zeroes():
 
 
 def test_call_with_number_of_seconds():
-    assert ds(70) == "1m10s"
+    assert ds(seconds=70) == "1m10s"
 
 
 def test_call_with_number_of_seconds_float():
-    assert ds(70.4) == "1m10s"
-    assert ds(70.9) == "1m10s"
+    assert ds(seconds=70.4) == "1m10s"
+    assert ds(seconds=70.9) == "1m10s"
 
 
 def test_call_with_negative_number():
-    assert ds(-61) == "-1m1s"
-    assert ds(-0) == "0s"
+    assert ds(seconds=-61) == "-1m1s"
+    assert ds(seconds=-0) == "0s"
 
 
 def test_keep_specified_zeroes():

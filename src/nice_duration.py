@@ -97,7 +97,7 @@ def duration_string(
         )
 
     amount_of_durations = len(
-        [p for p in [duration, seconds, milliseconds, microseconds] if p]
+        [p for p in [duration, seconds, milliseconds, microseconds] if p is not None]
     )
     if amount_of_durations == 0:
         raise TypeError(
@@ -117,13 +117,13 @@ def duration_string(
         infix_zeroes = True
         trailing_zeroes = True
 
-    if duration:
+    if duration is not None:
         total_microseconds = int(duration.total_seconds()) * 1000 * 1000 + int(
             duration.microseconds
         )
-    elif seconds:
+    elif seconds is not None:
         total_microseconds = int(seconds * 1000 * 1000)
-    elif milliseconds:
+    elif milliseconds is not None:
         total_microseconds = int(milliseconds * 1000)
     else:
         total_microseconds = microseconds
