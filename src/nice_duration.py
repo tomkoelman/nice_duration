@@ -19,68 +19,40 @@ UNIT_ABBREVIATIONS = {
 def _keep_specified_zeroes(
     values, leading_zeroes=False, trailing_zeroes=False, infix_zeroes=False
 ):
-    """Given a values dict, which is an ordered mapping from unit to
-    amount, return a values dict that has leading zeroes removed (if
+    """Given a values list, which is a list of pairs of units and amounts,
+    return a values list that has leading zeroes removed (if
     requested), trailing zeroes removed (if requested) and infix
     zeroes remove (if requested).
     """
 
-    values = values.copy()
+    leading = []
+    trailing = []
 
-    if not leading_zeroes:
-        # Remove all values that are 0 from the beginning of the values dict
-        for unit, value in values.copy().items():
-            if value:
-                break
-            else:
-                del values[unit]
+    # Find index for first pair where value is non-zero
+    first_non_zero_index = next((i for i, e in enumerate(values) if e[1]), 0)
 
-    if not trailing_zeroes:
-        # Remove all values that are 0 from the end of the values dict
-        for unit, value in reversed(values.copy().items()):
-            if value:
-                break
-            else:
-                del values[unit]
+    # Find index for last pair where value is non-zero
+    last_non_zero_index = len(values) - next(
+        (i for i, e in enumerate(reversed(values)) if e[1]), 0
+    )
 
-    # Removing infix zeroes only makes sense when there are more than
-    # 2 values left, if not we're done
-    if infix_zeroes or len(values) <= 2:
-        return values
+    if leading_zeroes:
+        # Put leading zeroes in `leading`
+        leading = values[:first_non_zero_index]
 
-    # We split off potential leading zeroes
-    leading = {}
-    for unit, value in values.items():
-        if value:
-            break
-        else:
-            leading[unit] = value
+    if trailing_zeroes:
+        # Put trailing zeroes in `trailing`
+        trailing = values[last_non_zero_index:]
 
-    # We split off potential trailing zeroes
-    trailing = {}
-    for unit, value in reversed(values.items()):
-        if value:
-            break
-        else:
-            trailing[unit] = value
+    # Infix is the bit in between the found indices
+    infix = values[first_non_zero_index:last_non_zero_index]
 
-    # Check whether there are enough elements left between leading
-    # zeroes and trailing zeroes. If there are less than 3 elements
-    # beteen leading and trailing zeroes, we know for sure there are
-    # no infix zeroes, because an infix zero needs values on both
-    # sides (otherwise it is not infix).
-    if len(values) - len(leading) - len(trailing) <= 2:
-        return values
+    # Remove all zeroes from infix if we are not interested in them
+    if not infix_zeroes:
+        infix = [e for e in infix if e[1]]
 
-    # Remove leading and trailing zeroes from values
-    for unit in leading | trailing:
-        del values[unit]
-
-    # From this remaining dict we can remove all zero values
-    values = {u: v for (u, v) in values.items() if v}
-
-    # Infix zeroes are removed. Now re-attach leading and trailing zeroes
-    return leading | values | dict(reversed(trailing.items()))
+    # Return what's left
+    return leading + infix + trailing
 
 
 def duration_string(
@@ -116,12 +88,12 @@ def duration_string(
     is_negative = total_seconds < 0
     total_seconds = abs(total_seconds)
 
-    values = {}
+    values = []
     remainder = total_seconds
 
     for unit, seconds_per_unit in SECONDS_PER_UNIT.items():
         value, remainder = divmod(remainder, seconds_per_unit)
-        values[unit] = value
+        values.append([unit, value])
 
     values = _keep_specified_zeroes(
         values,
@@ -131,9 +103,9 @@ def duration_string(
     )
 
     if not values:
-        values["second"] = 0
+        values = [["second", 0]]
 
-    parts = [f"{value}{UNIT_ABBREVIATIONS[unit]}" for unit, value in values.items()]
+    parts = [f"{e[1]}{UNIT_ABBREVIATIONS[e[0]]}" for e in values]
     duration_string = separator.join(parts)
 
     if is_negative and duration_string != "0s":

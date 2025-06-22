@@ -47,38 +47,43 @@ def test_call_with_negative_number():
     assert ds(-0) == "0s"
 
 
-def test_apply_zero_logic():
-    assert _ks0({"week": 0, "hour": 1, "minute": 1}) == {
-        "hour": 1,
-        "minute": 1,
-    }
-    assert _ks0({"week": 0, "hour": 1, "minute": 1}, leading_zeroes=True) == {
-        "week": 0,
-        "hour": 1,
-        "minute": 1,
-    }
-    assert _ks0({"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}) == {"b": 1, "e": 1}
+def test_keep_specified_zeroes():
+    assert _ks0([["week", 0], ["hour", 1], ["minute", 1]]) == [
+        ["hour", 1],
+        ["minute", 1],
+    ]
+    assert _ks0([["week", 0], ["hour", 1], ["minute", 1]], leading_zeroes=True) == [
+        ["week", 0],
+        ["hour", 1],
+        ["minute", 1],
+    ]
+    assert _ks0([["a", 0], ["b", 1], ["c", 0], ["d", 0], ["e", 1], ["f", 0]]) == [
+        ["b", 1],
+        ["e", 1],
+    ]
     assert _ks0(
-        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}, leading_zeroes=True
-    ) == {"a": 0, "b": 1, "e": 1}
+        [["a", 0], ["b", 1], ["c", 0], ["d", 0], ["e", 1], ["f", 0]],
+        leading_zeroes=True,
+    ) == [["a", 0], ["b", 1], ["e", 1]]
     assert _ks0(
-        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}, trailing_zeroes=True
-    ) == {"b": 1, "e": 1, "f": 0}
+        [["a", 0], ["b", 1], ["c", 0], ["d", 0], ["e", 1], ["f", 0]],
+        trailing_zeroes=True,
+    ) == [["b", 1], ["e", 1], ["f", 0]]
     assert _ks0(
-        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0}, infix_zeroes=True
-    ) == {"b": 1, "c": 0, "d": 0, "e": 1}
+        [["a", 0], ["b", 1], ["c", 0], ["d", 0], ["e", 1], ["f", 0]], infix_zeroes=True
+    ) == [["b", 1], ["c", 0], ["d", 0], ["e", 1]]
     assert _ks0(
-        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0},
+        [["a", 0], ["b", 1], ["c", 0], ["d", 0], ["e", 1], ["f", 0]],
         leading_zeroes=True,
         infix_zeroes=True,
-    ) == {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1}
+    ) == [["a", 0], ["b", 1], ["c", 0], ["d", 0], ["e", 1]]
     assert _ks0(
-        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0},
+        [["a", 0], ["b", 1], ["c", 0], ["d", 0], ["e", 1], ["f", 0]],
         trailing_zeroes=True,
         infix_zeroes=True,
-    ) == {"b": 1, "c": 0, "d": 0, "e": 1, "f": 0}
+    ) == [["b", 1], ["c", 0], ["d", 0], ["e", 1], ["f", 0]]
     assert _ks0(
-        {"a": 0, "b": 1, "c": 0, "d": 0, "e": 1, "f": 0},
+        [["a", 0], ["b", 1], ["c", 0], ["d", 0], ["e", 1], ["f", 0]],
         trailing_zeroes=True,
         leading_zeroes=True,
-    ) == {"a": 0, "b": 1, "e": 1, "f": 0}
+    ) == [["a", 0], ["b", 1], ["e", 1], ["f", 0]]
