@@ -1,13 +1,13 @@
 from datetime import timedelta
 
 UNITS = {
-    "weeks": {"abbreviation": "w", "μs_per_unit": 7 * 24 * 60 * 60 * 1000 * 1000},
-    "days": {"abbreviation": "d", "μs_per_unit": 24 * 60 * 60 * 1000 * 1000},
-    "hours": {"abbreviation": "h", "μs_per_unit": 60 * 60 * 1000 * 1000},
-    "minutes": {"abbreviation": "m", "μs_per_unit": 60 * 1000 * 1000},
-    "seconds": {"abbreviation": "s", "μs_per_unit": 1000 * 1000},
-    "milliseconds": {"abbreviation": "ms", "μs_per_unit": 1000},
-    "microseconds": {"abbreviation": "μs", "μs_per_unit": 1},
+    "weeks": {"abbreviation": "w", "µs_per_unit": 7 * 24 * 60 * 60 * 1000 * 1000},
+    "days": {"abbreviation": "d", "µs_per_unit": 24 * 60 * 60 * 1000 * 1000},
+    "hours": {"abbreviation": "h", "µs_per_unit": 60 * 60 * 1000 * 1000},
+    "minutes": {"abbreviation": "m", "µs_per_unit": 60 * 1000 * 1000},
+    "seconds": {"abbreviation": "s", "µs_per_unit": 1000 * 1000},
+    "milliseconds": {"abbreviation": "ms", "µs_per_unit": 1000},
+    "microseconds": {"abbreviation": "µs", "µs_per_unit": 1},
 }
 
 
@@ -135,7 +135,7 @@ def duration_string(
     remainder = total_microseconds
 
     for unit, unit_info in UNITS.items():
-        value, remainder = divmod(remainder, unit_info["μs_per_unit"])
+        value, remainder = divmod(remainder, unit_info["µs_per_unit"])
         values.append([unit, value])
         if unit == precision:
             break
