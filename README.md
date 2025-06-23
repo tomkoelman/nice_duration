@@ -1,87 +1,65 @@
 # nice_duration
 
-This is a Python module that introduces a way of formatting a
-`timedelta` instance like so: `3h12m`. It can also format an `int` or
-a `float` representing a number of seconds in the same way. A `float`
-is just converted to an `int`, so `70.9` is converted to `70`.
+A Python library for formatting durations in a human-readable way. Convert `timedelta` objects or numeric time values into readable strings like `3h20m` or `2w5d`.
 
-The `separator` parameter, which defaults to the empty string,
-determines what the individual components are concatenated with.
-Setting `separator` to a single space changes the above example to
-`3h 12m`.
+## Quick Start
 
-Components with value 0 are left out. That can be changed by specifying
- - `leading_zeroes`: set to `True` to keep the leading zeroes 
- - `trailing_zeroes`: set to `True` to keep the trailing zeroes
- - `infix_zeroes`: set to `True` to keep the zeroes between values 
+```python
+from datetime import timedelta
+from nice_duration import duration_string
 
-For example, by setting `trailing_zeroes` to `True`, the example `duration_string` is
-changed to `3h12m0s`.
+# From timedelta objects
+duration_string(timedelta(hours=3, minutes=20))  # "3h20m"
 
-For convenience, setting `all_zeroes` to `True` will set all three to `True`.
+# From seconds (int or float)
+duration_string(seconds=200)    # "3h20m"
+duration_string(seconds=200.9)  # "3h20m" (truncated)
+
+# From milliseconds or microseconds
+duration_string(milliseconds=1500)  # "1s" (with default precision)
+duration_string(microseconds=1500000)  # "1s"
+```
+
+## Precision Control
+Control the smallest unit displayed. The `precision` parameter can be one of `weeks`,
+`days`, `hours`, `minutes`, `seconds`, `milliseconds` or `microseconds`.
+
+```python
+delta = timedelta(weeks=2, days=3, hours=4, minutes=5, seconds=30, microseconds=500000)
+
+duration_string(delta, precision="weeks")        # "2w"
+duration_string(delta, precision="minutes")      # "2w3d4h5m"
+duration_string(delta, precision="seconds")      # "2w3d4h5m30s"
+duration_string(delta, precision="milliseconds") # "2w3d4h5m30s500ms"
+
+```
+
+## Flexible Zero Handling
+By default, zero values are omitted, but zeroes can be left alone when leading, trailing or infix.
+
+```python
+delta = timedelta(days=3, minutes=12)  # Note: no hours
+
+duration_string(delta)                          # "3d12m"
+duration_string(delta, infix_zeroes=True)       # "3d0h12m"
+duration_string(delta, leading_zeroes=True)     # "0w3d12m"
+duration_string(delta, trailing_zeroes=True)    # "3d12m0s"
+duration_string(delta, all_zeroes=True)         # "0w3d0h12m0s"
+```
+
+##  Custom Separators
+Add spacing or custom separators between units:
+
+```python
+delta = timedelta(hours=3, minutes=20)
+
+duration_string(delta, separator=" ")     # "3h 20m"
+```
 
 ## Limitations
-- No sub-second precision
+
 - Maximum unit is weeks (because bigger units have no fixed length)
 
-## Examples
-```python
->>> from datetime import timedelta
->>> from nice_duration import duration_string
->>> duration_string(timedelta(hours=3, minutes=20))
-'3h20m'
-```
+## License
 
-`int` is interpreted as number of seconds
-```python
->>> duration_string(200) 
-'3h20m'
-```
-
-`float` is truncated to `int` and interpreted as a whole number of seconds
-```python
->>> duration_string(200.3) 
-'3h20m'
-```
-
-negative value
-```python
->>> duration_string(-13) 
-'-13s'
-```
-
-Setting `separator`:
-```python
->>> duration_string(timedelta(hours=3, minutes=20), separator=" ")
-'3h 20m'
-```
-
-Setting `all_zeroes`:
-```python
->>> duration_string(timedelta(hours=3, minutes=20), all_zeroes=True)
-'0w0d3h20m0s'
-```
-
-Setting `trailing_zeroes`:
-```python
->>> duration_string(timedelta(hours=3, minutes=20), trailing_zeroes=True)
-'3h20m0s'
-```
-
-Setting `leading_zeroes`:
-```python
->>> duration_string(timedelta(hours=3, minutes=20), leading_zeroes=True)
-'0w0d3h20m'
-```
-
-Setting `infix_zeroes`:
-```python
->>> duration_string(timedelta(hours=3, seconds=11), infix_zeroes=True)
-'3h0m11s'
-```
-
-Return value when `timedelta` is 0:
-```python
->>> duration_string(timedelta())
-'0s'
-```
+This project is licensed under the MIT License.
