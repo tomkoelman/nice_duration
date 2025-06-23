@@ -1,6 +1,6 @@
 # nice_duration
 
-A Python library for formatting durations in a human-readable way. Convert `timedelta` objects or numeric time values into readable strings like `3h20m` or `2w5d`.
+A Python library for formatting durations in a human-readable way. Convert `timedelta` objects or numeric time values into readable strings like `3h20m` or `2w5d`. This module features optional micro-second precision, configurable separators and flexible handling of zero-values.
 
 ## Quick Start
 
@@ -59,6 +59,7 @@ duration_string(delta, separator=" ")     # "3h 20m"
 ## Limitations
 
 - Maximum unit is weeks (because bigger units have no fixed length)
+- Float values are truncated
 
 ## License
 
