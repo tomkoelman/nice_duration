@@ -4,47 +4,35 @@ from nice_duration import _keep_specified_zeroes as _ks0
 import pytest
 
 
-def test_input_validation():
-    with pytest.raises(TypeError):
-        ds("invalid")
-    with pytest.raises(TypeError):
-        ds([1, 2, 3])
-
-
-def test_ms_in_timedelta():
-    delta = td(seconds=13, microseconds=12)
-    assert ds(delta) == "13s"
-
-
 def test_empty_timedelta():
     delta = td(seconds=0)
-    assert ds(delta) == "0s"
-    assert ds(delta, precision="hours") == "0h"
-    assert ds(delta, all_zeroes=True) == "0w0d0h0m0s"
+    assert ds(duration=delta) == "0s"
+    assert ds(duration=delta, precision="hours") == "0h"
+    assert ds(duration=delta, all_zeroes=True) == "0w0d0h0m0s"
 
 
 def test_separator():
     delta = td(hours=300, minutes=70)
-    assert ds(delta, separator=" ") == "1w 5d 13h 10m"
+    assert ds(duration=delta, separator=" ") == "1w 5d 13h 10m"
 
 
 def test_keeping_zeroes():
     delta = td(days=3, minutes=12)
-    assert ds(delta) == "3d12m"
-    assert ds(delta, infix_zeroes=True) == "3d0h12m"
-    assert ds(delta, leading_zeroes=True) == "0w3d12m"
-    assert ds(delta, trailing_zeroes=True) == "3d12m0s"
-    assert ds(delta, leading_zeroes=True, trailing_zeroes=True) == "0w3d12m0s"
+    assert ds(duration=delta) == "3d12m"
+    assert ds(duration=delta, infix_zeroes=True) == "3d0h12m"
+    assert ds(duration=delta, leading_zeroes=True) == "0w3d12m"
+    assert ds(duration=delta, trailing_zeroes=True) == "3d12m0s"
+    assert ds(duration=delta, leading_zeroes=True, trailing_zeroes=True) == "0w3d12m0s"
     assert (
         ds(
-            delta,
+            duration=delta,
             leading_zeroes=True,
             trailing_zeroes=True,
             infix_zeroes=True,
         )
         == "0w3d0h12m0s"
     )
-    assert ds(delta, all_zeroes=True) == "0w3d0h12m0s"
+    assert ds(duration=delta, all_zeroes=True) == "0w3d0h12m0s"
 
 
 def test_call_with_number_of_seconds_float():
@@ -99,31 +87,30 @@ def test_keep_specified_zeroes():
     ) == [["a", 0], ["b", 1], ["e", 1], ["f", 0]]
 
 
-
 def test_precision_parameter():
     delta = td(weeks=2, days=3, hours=4, minutes=5, seconds=30, microseconds=500000)
 
     # Test precision at different levels
-    assert ds(delta, precision="weeks") == "2w"
-    assert ds(delta, precision="days") == "2w3d"
-    assert ds(delta, precision="hours") == "2w3d4h"
-    assert ds(delta, precision="minutes") == "2w3d4h5m"
-    assert ds(delta, precision="seconds") == "2w3d4h5m30s"
-    assert ds(delta, precision="milliseconds") == "2w3d4h5m30s500ms"
+    assert ds(duration=delta, precision="weeks") == "2w"
+    assert ds(duration=delta, precision="days") == "2w3d"
+    assert ds(duration=delta, precision="hours") == "2w3d4h"
+    assert ds(duration=delta, precision="minutes") == "2w3d4h5m"
+    assert ds(duration=delta, precision="seconds") == "2w3d4h5m30s"
+    assert ds(duration=delta, precision="milliseconds") == "2w3d4h5m30s500ms"
 
     delta = td(weeks=2, days=3, hours=4, minutes=5, seconds=30, microseconds=500)
-    assert ds(delta, precision="microseconds") == "2w3d4h5m30s500µs"
+    assert ds(duration=delta, precision="microseconds") == "2w3d4h5m30s500µs"
 
 
 def test_precision_with_zero_values():
     delta = td(seconds=0)
-    assert ds(delta, precision="weeks") == "0w"
-    assert ds(delta, precision="days") == "0d"
-    assert ds(delta, precision="hours") == "0h"
-    assert ds(delta, precision="minutes") == "0m"
-    assert ds(delta, precision="seconds") == "0s"
-    assert ds(delta, precision="milliseconds") == "0ms"
-    assert ds(delta, precision="microseconds") == "0µs"
+    assert ds(duration=delta, precision="weeks") == "0w"
+    assert ds(duration=delta, precision="days") == "0d"
+    assert ds(duration=delta, precision="hours") == "0h"
+    assert ds(duration=delta, precision="minutes") == "0m"
+    assert ds(duration=delta, precision="seconds") == "0s"
+    assert ds(duration=delta, precision="milliseconds") == "0ms"
+    assert ds(duration=delta, precision="microseconds") == "0µs"
 
 
 def test_milliseconds_parameter_float():

@@ -50,6 +50,7 @@ def _keep_specified_zeroes(
 
 
 def duration_string(
+    *,
     duration: timedelta = None,
     seconds: int | float = None,
     milliseconds: int | float = None,
