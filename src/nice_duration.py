@@ -62,21 +62,42 @@ def duration_string(
     all_zeroes=False,
     precision="seconds",
 ) -> str:
-    """Convert a timedelta object or numeric seconds to a human-readable string.
+    """Convert a timedelta object or numeric time value to a human-readable string.
 
-    When `duration` is a float, it is truncated to an `int`.
+    Accepts exactly one time input: either a timedelta object, or a numeric value
+    in seconds, milliseconds, or microseconds. Float values are truncated to integers.
+
+    Args:
+        duration: A timedelta object to convert
+        seconds: Number of seconds (int or float)
+        milliseconds: Number of milliseconds (int or float)
+        microseconds: Number of microseconds (int or float)
+        separator: String to insert between time units (default: "")
+        leading_zeroes: Include zero values before the first non-zero unit
+        trailing_zeroes: Include zero values after the last non-zero unit
+        infix_zeroes: Include zero values between non-zero units
+        all_zeroes: Include all zero values (equivalent to all three zero options)
+        precision: Stop conversion at this unit ("weeks", "days", "hours",
+                  "minutes", "seconds", "milliseconds", "microseconds")
+
+    Returns:
+        Nice duration string
+
+    Raises:
+        TypeError: If invalid input types are provided, multiple time inputs are
+                  given, no time input is provided, or invalid precision unit is specified
 
     Examples:
-    duration_string(timedelta(hours=3, minutes=20)) = "3h20m"
-    duration_string(timedelta(hours=3, minutes=20), separator=" ") = "3h 20m"
-    duration_string(timedelta(hours=3, minutes=20), all_zeroes=True) = "0w0d3h20m0s"
-    duration_string(timedelta(hours=3, minutes=20), precision="hours") = "3h"
-    duration_string(seconds=131) = "2m11s"
-    duration_string(seconds=131.9) = "2m11s"
-    duration_string(seconds=-131) = "-2m11s"
-    duration_string(timedelta(seconds=-75)) = "-1m15s"
+        duration_string(timedelta(hours=3, minutes=20)) -> "3h20m"
+        duration_string(timedelta(hours=3, minutes=20), separator=" ") -> "3h 20m"
+        duration_string(timedelta(hours=3, minutes=20), all_zeroes=True) -> "0w0d3h20m0s0ms0μs"
+        duration_string(timedelta(hours=3, minutes=20), precision="hours") -> "3h"
+        duration_string(seconds=131) -> "2m11s"
+        duration_string(seconds=131.9) -> "2m11s"
+        duration_string(seconds=-131) -> "-2m11s"
+        duration_string(milliseconds=1500, precision="milliseconds") -> "1s500ms"
+        duration_string(microseconds=1500000, precision="milliseconds") -> "1s500ms"
     """
-
     if duration and not isinstance(duration, timedelta):
         raise TypeError(
             f"Expected timedelta for duration, got {type(duration).__name__}"
