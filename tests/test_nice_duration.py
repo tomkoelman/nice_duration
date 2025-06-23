@@ -6,33 +6,33 @@ import pytest
 
 def test_empty_timedelta():
     delta = td(seconds=0)
-    assert ds(duration=delta) == "0s"
-    assert ds(duration=delta, precision="hours") == "0h"
-    assert ds(duration=delta, all_zeroes=True) == "0w0d0h0m0s"
+    assert ds(timedelta=delta) == "0s"
+    assert ds(timedelta=delta, precision="hours") == "0h"
+    assert ds(timedelta=delta, all_zeroes=True) == "0w0d0h0m0s"
 
 
 def test_separator():
     delta = td(hours=300, minutes=70)
-    assert ds(duration=delta, separator=" ") == "1w 5d 13h 10m"
+    assert ds(timedelta=delta, separator=" ") == "1w 5d 13h 10m"
 
 
 def test_keeping_zeroes():
     delta = td(days=3, minutes=12)
-    assert ds(duration=delta) == "3d12m"
-    assert ds(duration=delta, infix_zeroes=True) == "3d0h12m"
-    assert ds(duration=delta, leading_zeroes=True) == "0w3d12m"
-    assert ds(duration=delta, trailing_zeroes=True) == "3d12m0s"
-    assert ds(duration=delta, leading_zeroes=True, trailing_zeroes=True) == "0w3d12m0s"
+    assert ds(timedelta=delta) == "3d12m"
+    assert ds(timedelta=delta, infix_zeroes=True) == "3d0h12m"
+    assert ds(timedelta=delta, leading_zeroes=True) == "0w3d12m"
+    assert ds(timedelta=delta, trailing_zeroes=True) == "3d12m0s"
+    assert ds(timedelta=delta, leading_zeroes=True, trailing_zeroes=True) == "0w3d12m0s"
     assert (
         ds(
-            duration=delta,
+            timedelta=delta,
             leading_zeroes=True,
             trailing_zeroes=True,
             infix_zeroes=True,
         )
         == "0w3d0h12m0s"
     )
-    assert ds(duration=delta, all_zeroes=True) == "0w3d0h12m0s"
+    assert ds(timedelta=delta, all_zeroes=True) == "0w3d0h12m0s"
 
 
 def test_call_with_number_of_seconds_float():
@@ -91,26 +91,26 @@ def test_precision_parameter():
     delta = td(weeks=2, days=3, hours=4, minutes=5, seconds=30, microseconds=500000)
 
     # Test precision at different levels
-    assert ds(duration=delta, precision="weeks") == "2w"
-    assert ds(duration=delta, precision="days") == "2w3d"
-    assert ds(duration=delta, precision="hours") == "2w3d4h"
-    assert ds(duration=delta, precision="minutes") == "2w3d4h5m"
-    assert ds(duration=delta, precision="seconds") == "2w3d4h5m30s"
-    assert ds(duration=delta, precision="milliseconds") == "2w3d4h5m30s500ms"
+    assert ds(timedelta=delta, precision="weeks") == "2w"
+    assert ds(timedelta=delta, precision="days") == "2w3d"
+    assert ds(timedelta=delta, precision="hours") == "2w3d4h"
+    assert ds(timedelta=delta, precision="minutes") == "2w3d4h5m"
+    assert ds(timedelta=delta, precision="seconds") == "2w3d4h5m30s"
+    assert ds(timedelta=delta, precision="milliseconds") == "2w3d4h5m30s500ms"
 
     delta = td(weeks=2, days=3, hours=4, minutes=5, seconds=30, microseconds=500)
-    assert ds(duration=delta, precision="microseconds") == "2w3d4h5m30s500µs"
+    assert ds(timedelta=delta, precision="microseconds") == "2w3d4h5m30s500µs"
 
 
 def test_precision_with_zero_values():
     delta = td(seconds=0)
-    assert ds(duration=delta, precision="weeks") == "0w"
-    assert ds(duration=delta, precision="days") == "0d"
-    assert ds(duration=delta, precision="hours") == "0h"
-    assert ds(duration=delta, precision="minutes") == "0m"
-    assert ds(duration=delta, precision="seconds") == "0s"
-    assert ds(duration=delta, precision="milliseconds") == "0ms"
-    assert ds(duration=delta, precision="microseconds") == "0µs"
+    assert ds(timedelta=delta, precision="weeks") == "0w"
+    assert ds(timedelta=delta, precision="days") == "0d"
+    assert ds(timedelta=delta, precision="hours") == "0h"
+    assert ds(timedelta=delta, precision="minutes") == "0m"
+    assert ds(timedelta=delta, precision="seconds") == "0s"
+    assert ds(timedelta=delta, precision="milliseconds") == "0ms"
+    assert ds(timedelta=delta, precision="microseconds") == "0µs"
 
 
 def test_milliseconds_parameter_float():
@@ -135,7 +135,7 @@ def test_microseconds_parameter_float():
     assert ds(microseconds=999.9, precision="microseconds") == "999µs"
 
 
-def test_multiple_duration_parameters_error():
+def test_multiple_timedelta_parameters_error():
     with pytest.raises(TypeError):
         ds(seconds=60, milliseconds=1000)
 
@@ -146,7 +146,7 @@ def test_multiple_duration_parameters_error():
         ds(milliseconds=1000, microseconds=1000000)
 
     with pytest.raises(TypeError):
-        ds(duration=td(seconds=60), milliseconds=1000)
+        ds(timedelta=td(seconds=60), milliseconds=1000)
 
 
 def test_invalid_precision():

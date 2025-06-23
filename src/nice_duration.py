@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta as td
 
 UNITS = {
     "weeks": {"abbreviation": "w", "µs_per_unit": 7 * 24 * 60 * 60 * 1000 * 1000},
@@ -51,7 +51,7 @@ def _keep_specified_zeroes(
 
 def duration_string(
     *,
-    duration: timedelta = None,
+    timedelta: td = None,
     seconds: int | float = None,
     milliseconds: int | float = None,
     microseconds: int | float = None,
@@ -64,18 +64,18 @@ def duration_string(
 ) -> str:
     """Convert a timedelta object or numeric time value to a human-readable string.
 
-    Accepts exactly one time input: either a timedelta object, or a numeric value
+    Accepts exactly one duration input: either a timedelta object, or a numeric value
     in seconds, milliseconds, or microseconds. Float values are truncated to integers.
 
     Args:
-        duration: A timedelta object to convert
+        timedelta: A timedelta object
         seconds: Number of seconds (int or float)
         milliseconds: Number of milliseconds (int or float)
         microseconds: Number of microseconds (int or float)
         separator: String to insert between time units (default: "")
-        leading_zeroes: Include zero values before the first non-zero unit
-        trailing_zeroes: Include zero values after the last non-zero unit
-        infix_zeroes: Include zero values between non-zero units
+        leading_zeroes: Include leading zero values
+        trailing_zeroes: Include trailing zero values
+        infix_zeroes: Include zero values apart from leading and trailing
         all_zeroes: Include all zero values (equivalent to all three zero options)
         precision: Stop conversion at this unit ("weeks", "days", "hours",
                   "minutes", "seconds", "milliseconds", "microseconds")
@@ -88,19 +88,17 @@ def duration_string(
                   given, no time input is provided, or invalid precision unit is specified
 
     Examples:
-        duration_string(timedelta(hours=3, minutes=20)) -> "3h20m"
-        duration_string(timedelta(hours=3, minutes=20), separator=" ") -> "3h 20m"
-        duration_string(timedelta(hours=3, minutes=20), all_zeroes=True) -> "0w0d3h20m0s0ms0μs"
-        duration_string(timedelta(hours=3, minutes=20), precision="hours") -> "3h"
-        duration_string(seconds=131) -> "2m11s"
-        duration_string(seconds=131.9) -> "2m11s"
-        duration_string(seconds=-131) -> "-2m11s"
-        duration_string(milliseconds=1500, precision="milliseconds") -> "1s500ms"
-        duration_string(microseconds=1500000, precision="milliseconds") -> "1s500ms"
+        duration_string((timedelta=td(hours=3, minutes=20)) -> "3h20m"
+        duration_string((timedelta=td(hours=3, minutes=20), separator=" ") -> "3h 20m"
+        duration_string((timedelta=td(hours=3, minutes=20), all_zeroes=True, precision="microseconds") -> "0w0d3h20m0s0ms0µs"
+        duration_string((timedelta=td(hours=3, minutes=20), precision="hours") -> "3h"
+        duration_string((seconds=-131.9) -> "-2m11s"
+        duration_string((milliseconds=1500, precision="milliseconds") -> "1s500ms"
+        duration_string((microseconds=1500000, precision="milliseconds") -> "1s500ms"
     """
-    if duration and not isinstance(duration, timedelta):
+    if timedelta and not isinstance(timedelta, td):
         raise TypeError(
-            f"Expected timedelta for duration, got {type(duration).__name__}"
+            f"Expected timedelta for timedelta, got {type(timedelta).__name__}"
         )
 
     if seconds and not isinstance(seconds, (int, float)):
@@ -119,16 +117,16 @@ def duration_string(
         )
 
     amount_of_durations = len(
-        [p for p in [duration, seconds, milliseconds, microseconds] if p is not None]
+        [p for p in [timedelta, seconds, milliseconds, microseconds] if p is not None]
     )
     if amount_of_durations == 0:
         raise TypeError(
-            "Expected one of duration, seconds, milliseconds of microseconds to have a value."
+            "Expected one of timedelta, seconds, milliseconds of microseconds to have a value."
         )
 
     if amount_of_durations > 1:
         raise TypeError(
-            "Expected only one of duration, seconds, milliseconds of microseconds to have a value."
+            "Expected only one of timedelta, seconds, milliseconds of microseconds to have a value."
         )
 
     if precision not in UNITS:
@@ -139,9 +137,9 @@ def duration_string(
         infix_zeroes = True
         trailing_zeroes = True
 
-    if duration is not None:
-        total_microseconds = int(duration.total_seconds()) * 1000 * 1000 + int(
-            duration.microseconds
+    if timedelta is not None:
+        total_microseconds = int(timedelta.total_seconds()) * 1000 * 1000 + int(
+            timedelta.microseconds
         )
     elif seconds is not None:
         total_microseconds = int(seconds * 1000 * 1000)
