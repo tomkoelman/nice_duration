@@ -126,7 +126,7 @@ def duration_string(
     elif milliseconds is not None:
         total_microseconds = int(milliseconds * 1000)
     else:
-        total_microseconds = microseconds
+        total_microseconds = int(microseconds)
 
     is_negative = total_microseconds < 0
     total_microseconds = abs(total_microseconds)
