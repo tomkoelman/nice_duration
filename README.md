@@ -12,7 +12,7 @@ from nice_duration import duration_string
 duration_string(timedelta(hours=3, minutes=20))  # "3h20m"
 
 # From seconds (int or float)
-duration_string(seconds=200)    # "3h20m"
+duration_string(seconds=200)    # "3m20s"
 duration_string(seconds=200.9)  # "3h20m" (truncated)
 
 # From milliseconds or microseconds
