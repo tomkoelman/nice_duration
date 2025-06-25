@@ -167,7 +167,7 @@ def duration_string(
         infix_zeroes=infix_zeroes,
     )
 
-    if len(values) == 0:
+    if not values:
         values = [[precision, 0]]
 
     parts = [f"{e[1]}{UNITS[e[0]]['abbreviation']}" for e in values]
