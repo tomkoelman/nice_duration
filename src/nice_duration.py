@@ -173,7 +173,8 @@ def duration_string(
     parts = [f"{e[1]}{UNITS[e[0]]['abbreviation']}" for e in values]
     duration_string = separator.join(parts)
 
-    if is_negative and duration_string != "0s":
+    has_non_zero_values = any(v[1] for v in values)
+    if is_negative and has_non_zero_values:
         duration_string = "-" + duration_string
 
     return duration_string
