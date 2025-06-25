@@ -161,3 +161,13 @@ def test_edge_cases_small_values():
     assert ds(milliseconds=0.5, precision="milliseconds") == "0ms"
     assert ds(microseconds=0.9, precision="microseconds") == "0µs"
     assert ds(microseconds=1500, precision="milliseconds") == "1ms"
+
+
+def test_no_input_error():
+    with pytest.raises(TypeError):
+        ds()
+
+
+def test_invalid_timedelta_type_error():
+    with pytest.raises(TypeError):
+        ds(timedelta="not a timedelta")
