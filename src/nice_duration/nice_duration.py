@@ -20,33 +20,34 @@ def _keep_specified_zeroes(
     zeroes remove (if requested).
     """
 
-    leading = []
-    trailing = []
+    non_zero_indices = [i for i, (_, value) in enumerate(values) if value]
 
-    # Find index for first pair where value is non-zero
-    first_non_zero_index = next((i for i, e in enumerate(values) if e[1]), 0)
+    if not non_zero_indices:
+        # If all values are zero, keep them all if any flag is set.
+        return values if any([leading_zeroes, trailing_zeroes, infix_zeroes]) else []
 
-    # Find index for last pair where value is non-zero
-    last_non_zero_index = len(values) - next(
-        (i for i, e in enumerate(reversed(values)) if e[1]), 0
-    )
+    first_non_zero_index = non_zero_indices[0]
+    last_non_zero_index = non_zero_indices[-1]
 
-    if leading_zeroes:
-        # Put leading zeroes in `leading`
-        leading = values[:first_non_zero_index]
+    result = []
+    for i, pair in enumerate(values):
+        if pair[1] != 0:
+            result.append(pair)
+            continue
 
-    if trailing_zeroes:
-        # Put trailing zeroes in `trailing`
-        trailing = values[last_non_zero_index:]
+        # It's a zero value, decide whether to keep it.
+        is_leading = i < first_non_zero_index
+        is_trailing = i > last_non_zero_index
+        is_infix = first_non_zero_index < i < last_non_zero_index
 
-    # Infix is the bit in between the found indices
-    infix = values[first_non_zero_index:last_non_zero_index]
+        if (
+            (is_leading and leading_zeroes)
+            or (is_trailing and trailing_zeroes)
+            or (is_infix and infix_zeroes)
+        ):
+            result.append(pair)
 
-    # Remove all zeroes from infix if we are not interested in them
-    if not infix_zeroes:
-        infix = [e for e in infix if e[1]]
-
-    return leading + infix + trailing
+    return result
 
 
 def duration_string(
