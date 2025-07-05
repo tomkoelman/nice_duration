@@ -14,7 +14,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-license = "MIT"
+license = "MIT-0"
 license-files = [ "LICENSE" ]
 
 [project.urls]
