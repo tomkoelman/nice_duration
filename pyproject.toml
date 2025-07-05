@@ -1,6 +1,6 @@
 [project]
 name = "nice_duration"
-version = "1.0.3"
+version = "1.0.4"
 authors = [
   { name="Tom Koelman" },
 ]
@@ -13,6 +13,7 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: MIT No Attribution License (MIT-0)",
 ]
 license = "MIT-0"
 license-files = [ "LICENSE" ]
