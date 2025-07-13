@@ -172,10 +172,10 @@ def duration_string(
         values = [[precision, 0]]
 
     parts = [f"{e[1]}{UNITS[e[0]]['abbreviation']}" for e in values]
-    duration_string = separator.join(parts)
+    result = separator.join(parts)
 
     has_non_zero_values = any(v[1] for v in values)
     if is_negative and has_non_zero_values:
-        duration_string = "-" + duration_string
+        result = "-" + result
 
-    return duration_string
+    return result
