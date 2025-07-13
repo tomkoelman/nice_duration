@@ -89,13 +89,13 @@ def duration_string(
                   given, no time input is provided, or invalid precision unit is specified
 
     Examples:
-        duration_string((timedelta=td(hours=3, minutes=20)) -> "3h20m"
-        duration_string((timedelta=td(hours=3, minutes=20), separator=" ") -> "3h 20m"
-        duration_string((timedelta=td(hours=3, minutes=20), all_zeroes=True, precision="microseconds") -> "0w0d3h20m0s0ms0µs"
-        duration_string((timedelta=td(hours=3, minutes=20), precision="hours") -> "3h"
-        duration_string((seconds=-131.9) -> "-2m11s"
-        duration_string((milliseconds=1500, precision="milliseconds") -> "1s500ms"
-        duration_string((microseconds=1500000, precision="milliseconds") -> "1s500ms"
+        duration_string(timedelta=td(hours=3, minutes=20)) -> "3h20m"
+        duration_string(timedelta=td(hours=3, minutes=20), separator=" ") -> "3h 20m"
+        duration_string(timedelta=td(hours=3, minutes=20), all_zeroes=True, precision="microseconds") -> "0w0d3h20m0s0ms0µs"
+        duration_string(timedelta=td(hours=3, minutes=20), precision="hours") -> "3h"
+        duration_string(seconds=-131.9) -> "-2m11s"
+        duration_string(milliseconds=1500, precision="milliseconds") -> "1s500ms"
+        duration_string(microseconds=1500000, precision="milliseconds") -> "1s500ms"
     """
     if timedelta and not isinstance(timedelta, td):
         raise TypeError(
