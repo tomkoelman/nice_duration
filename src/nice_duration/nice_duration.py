@@ -122,12 +122,12 @@ def duration_string(
     )
     if amount_of_durations == 0:
         raise TypeError(
-            "Expected one of timedelta, seconds, milliseconds of microseconds to have a value."
+            "Expected one of timedelta, seconds, milliseconds or microseconds to have a value."
         )
 
     if amount_of_durations > 1:
         raise TypeError(
-            "Expected only one of timedelta, seconds, milliseconds of microseconds to have a value."
+            "Expected only one of timedelta, seconds, milliseconds or microseconds to have a value."
         )
 
     if precision not in UNITS:
