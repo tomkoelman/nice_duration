@@ -171,3 +171,24 @@ def test_no_input_error():
 def test_invalid_timedelta_type_error():
     with pytest.raises(TypeError):
         ds(timedelta="not a timedelta")
+
+
+def test_boolean_values_rejected():
+    """Boolean values should be rejected even though bool is a subclass of int."""
+    with pytest.raises(TypeError):
+        ds(seconds=True)
+
+    with pytest.raises(TypeError):
+        ds(seconds=False)
+
+    with pytest.raises(TypeError):
+        ds(milliseconds=True)
+
+    with pytest.raises(TypeError):
+        ds(milliseconds=False)
+
+    with pytest.raises(TypeError):
+        ds(microseconds=True)
+
+    with pytest.raises(TypeError):
+        ds(microseconds=False)

@@ -97,22 +97,28 @@ def duration_string(
         duration_string(milliseconds=1500, precision="milliseconds") -> "1s500ms"
         duration_string(microseconds=1500000, precision="milliseconds") -> "1s500ms"
     """
-    if timedelta and not isinstance(timedelta, td):
+    if timedelta is not None and not isinstance(timedelta, td):
         raise TypeError(
             f"Expected timedelta for timedelta, got {type(timedelta).__name__}"
         )
 
-    if seconds and not isinstance(seconds, (int, float)):
+    if seconds is not None and (
+        isinstance(seconds, bool) or not isinstance(seconds, (int, float))
+    ):
         raise TypeError(
             f"Expected int or float for seconds, got {type(seconds).__name__}"
         )
 
-    if milliseconds and not isinstance(milliseconds, (int, float)):
+    if milliseconds is not None and (
+        isinstance(milliseconds, bool) or not isinstance(milliseconds, (int, float))
+    ):
         raise TypeError(
             f"Expected int or float for milliseconds, got {type(milliseconds).__name__}"
         )
 
-    if microseconds and not isinstance(microseconds, (int, float)):
+    if microseconds is not None and (
+        isinstance(microseconds, bool) or not isinstance(microseconds, (int, float))
+    ):
         raise TypeError(
             f"Expected int or float for microseconds, got {type(microseconds).__name__}"
         )
