@@ -22,7 +22,7 @@ wheels = [
 
 [[package]]
 name = "nice-duration"
-version = "1.0.8"
+version = "1.1.0"
 source = { editable = "." }
 
 [package.dev-dependencies]
