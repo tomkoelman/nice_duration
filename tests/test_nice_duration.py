@@ -45,6 +45,20 @@ def test_call_with_negative_number():
     assert ds(seconds=-0) == "0s"
 
 
+def test_negative_timedelta():
+    assert ds(timedelta=td(milliseconds=-500), precision="milliseconds") == "-500ms"
+    assert ds(timedelta=td(microseconds=-1), precision="microseconds") == "-1µs"
+    assert (
+        ds(timedelta=td(seconds=-1, milliseconds=-500), precision="milliseconds")
+        == "-1s500ms"
+    )
+    assert (
+        ds(timedelta=td(seconds=-5, microseconds=-500000), precision="milliseconds")
+        == "-5s500ms"
+    )
+    assert ds(timedelta=td(seconds=-61)) == "-1m1s"
+
+
 def test_keep_specified_zeroes():
     assert _ks0([["week", 0], ["hour", 1], ["minute", 1]]) == [
         ["hour", 1],

@@ -145,8 +145,10 @@ def duration_string(
         trailing_zeroes = True
 
     if timedelta is not None:
-        total_microseconds = int(timedelta.total_seconds()) * 1000 * 1000 + int(
-            timedelta.microseconds
+        total_microseconds = (
+            timedelta.days * 86_400 * 1_000_000
+            + timedelta.seconds * 1_000_000
+            + timedelta.microseconds
         )
     elif seconds is not None:
         total_microseconds = int(seconds * 1000 * 1000)
