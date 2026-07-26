@@ -52,10 +52,10 @@ def _keep_specified_zeroes(
 
 def duration_string(
     *,
-    timedelta: td = None,
-    seconds: int | float = None,
-    milliseconds: int | float = None,
-    microseconds: int | float = None,
+    timedelta: td | None = None,
+    seconds: float | None = None,
+    milliseconds: float | None = None,
+    microseconds: float | None = None,
     separator="",
     leading_zeroes=False,
     trailing_zeroes=False,

@@ -1,7 +1,9 @@
 from datetime import timedelta as td
-from nice_duration import duration_string as ds
-from nice_duration import _keep_specified_zeroes as _ks0
+
 import pytest
+
+from nice_duration import _keep_specified_zeroes as _ks0
+from nice_duration import duration_string as ds
 
 
 def test_empty_timedelta():
