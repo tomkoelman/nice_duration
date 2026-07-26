@@ -24,30 +24,24 @@ def _keep_specified_zeroes(
 
     if not non_zero_indices:
         # If all values are zero, keep them all if any flag is set.
-        return values if any([leading_zeroes, trailing_zeroes, infix_zeroes]) else []
+        return values if (leading_zeroes or trailing_zeroes or infix_zeroes) else []
 
     first_non_zero_index = non_zero_indices[0]
     last_non_zero_index = non_zero_indices[-1]
 
-    result = []
-    for i, pair in enumerate(values):
-        if pair[1] != 0:
-            result.append(pair)
-            continue
-
-        # It's a zero value, decide whether to keep it.
-        is_leading = i < first_non_zero_index
-        is_trailing = i > last_non_zero_index
-        is_infix = first_non_zero_index < i < last_non_zero_index
-
-        if (
-            (is_leading and leading_zeroes)
-            or (is_trailing and trailing_zeroes)
-            or (is_infix and infix_zeroes)
-        ):
-            result.append(pair)
-
-    return result
+    # Keep every non-zero value, and each zero whose region was requested.
+    return [
+        pair
+        for i, pair in enumerate(values)
+        if pair[1]
+        or (
+            leading_zeroes
+            if i < first_non_zero_index
+            else trailing_zeroes
+            if i > last_non_zero_index
+            else infix_zeroes
+        )
+    ]
 
 
 def duration_string(
