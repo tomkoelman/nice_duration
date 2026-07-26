@@ -96,36 +96,28 @@ def duration_string(
             f"Expected timedelta for timedelta, got {type(timedelta).__name__}"
         )
 
-    if seconds is not None and (
-        isinstance(seconds, bool) or not isinstance(seconds, (int, float))
-    ):
-        raise TypeError(
-            f"Expected int or float for seconds, got {type(seconds).__name__}"
-        )
+    # Numeric inputs, keyed by the unit they are expressed in.
+    numeric = {
+        "seconds": seconds,
+        "milliseconds": milliseconds,
+        "microseconds": microseconds,
+    }
 
-    if milliseconds is not None and (
-        isinstance(milliseconds, bool) or not isinstance(milliseconds, (int, float))
-    ):
-        raise TypeError(
-            f"Expected int or float for milliseconds, got {type(milliseconds).__name__}"
-        )
+    for name, value in numeric.items():
+        if value is not None and (
+            isinstance(value, bool) or not isinstance(value, (int, float))
+        ):
+            raise TypeError(
+                f"Expected int or float for {name}, got {type(value).__name__}"
+            )
 
-    if microseconds is not None and (
-        isinstance(microseconds, bool) or not isinstance(microseconds, (int, float))
-    ):
-        raise TypeError(
-            f"Expected int or float for microseconds, got {type(microseconds).__name__}"
-        )
-
-    amount_of_durations = len(
-        [p for p in [timedelta, seconds, milliseconds, microseconds] if p is not None]
-    )
-    if amount_of_durations == 0:
+    provided = [p for p in (timedelta, *numeric.values()) if p is not None]
+    if not provided:
         raise TypeError(
             "Expected one of timedelta, seconds, milliseconds or microseconds to have a value."
         )
 
-    if amount_of_durations > 1:
+    if len(provided) > 1:
         raise TypeError(
             "Expected only one of timedelta, seconds, milliseconds or microseconds to have a value."
         )
@@ -144,12 +136,9 @@ def duration_string(
             + timedelta.seconds * 1_000_000
             + timedelta.microseconds
         )
-    elif seconds is not None:
-        total_microseconds = int(seconds * 1000 * 1000)
-    elif milliseconds is not None:
-        total_microseconds = int(milliseconds * 1000)
     else:
-        total_microseconds = int(microseconds)
+        name, value = next((n, v) for n, v in numeric.items() if v is not None)
+        total_microseconds = int(value * UNITS[name]["µs_per_unit"])
 
     is_negative = total_microseconds < 0
     total_microseconds = abs(total_microseconds)
