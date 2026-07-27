@@ -13,7 +13,7 @@ duration_string(timedelta=timedelta(hours=3, minutes=20))  # "3h20m"
 
 # From seconds (int or float)
 duration_string(seconds=200)  # "3m20s"
-duration_string(seconds=200.9)  # "3h20m" (truncated)
+duration_string(seconds=200.9)  # "3m20s" (truncated)
 
 # From milliseconds or microseconds
 duration_string(milliseconds=1500)  # "1s" (with default precision)
