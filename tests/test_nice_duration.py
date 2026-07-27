@@ -151,6 +151,33 @@ def test_microseconds_parameter_float():
     assert ds(microseconds=999.9, precision="microseconds") == "999µs"
 
 
+def test_floats_that_are_exact_in_decimal_but_not_in_binary():
+    """A float naming a whole number of microseconds must not lose one.
+
+    4.1 * 1000000 is 4099999.9999999995 in binary floating point, so a plain
+    truncation would report "4s99ms999us" instead of "4s100ms".
+    """
+    assert ds(seconds=4.1, precision="microseconds") == "4s100ms"
+    assert ds(seconds=4.1, precision="milliseconds") == "4s100ms"
+    assert ds(seconds=8.2, precision="microseconds") == "8s200ms"
+    assert ds(seconds=-4.1, precision="milliseconds") == "-4s100ms"
+    assert ds(milliseconds=1.001, precision="microseconds") == "1ms1µs"
+    assert ds(milliseconds=32.3, precision="microseconds") == "32ms300µs"
+
+    # Both input paths agree on the same duration.
+    assert ds(seconds=4.1, precision="microseconds") == ds(
+        timedelta=td(seconds=4.1), precision="microseconds"
+    )
+
+
+def test_sub_microsecond_fractions_are_still_truncated():
+    """Fixing the binary error must not turn truncation into rounding."""
+    assert ds(microseconds=0.9, precision="microseconds") == "0µs"
+    assert ds(microseconds=1500.7, precision="microseconds") == "1ms500µs"
+    assert ds(microseconds=-1500.7, precision="microseconds") == "-1ms500µs"
+    assert ds(milliseconds=0.9999, precision="microseconds") == "999µs"
+
+
 def test_multiple_timedelta_parameters_error():
     with pytest.raises(TypeError):
         ds(seconds=60, milliseconds=1000)
