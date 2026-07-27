@@ -1,13 +1,20 @@
 from datetime import timedelta as td
+from typing import NamedTuple
+
+
+class _Unit(NamedTuple):
+    abbreviation: str
+    us_per_unit: int
+
 
 UNITS = {
-    "weeks": {"abbreviation": "w", "µs_per_unit": 7 * 24 * 60 * 60 * 1000 * 1000},
-    "days": {"abbreviation": "d", "µs_per_unit": 24 * 60 * 60 * 1000 * 1000},
-    "hours": {"abbreviation": "h", "µs_per_unit": 60 * 60 * 1000 * 1000},
-    "minutes": {"abbreviation": "m", "µs_per_unit": 60 * 1000 * 1000},
-    "seconds": {"abbreviation": "s", "µs_per_unit": 1000 * 1000},
-    "milliseconds": {"abbreviation": "ms", "µs_per_unit": 1000},
-    "microseconds": {"abbreviation": "µs", "µs_per_unit": 1},
+    "weeks": _Unit("w", 7 * 24 * 60 * 60 * 1000 * 1000),
+    "days": _Unit("d", 24 * 60 * 60 * 1000 * 1000),
+    "hours": _Unit("h", 60 * 60 * 1000 * 1000),
+    "minutes": _Unit("m", 60 * 1000 * 1000),
+    "seconds": _Unit("s", 1000 * 1000),
+    "milliseconds": _Unit("ms", 1000),
+    "microseconds": _Unit("µs", 1),
 }
 
 
@@ -134,7 +141,7 @@ def duration_string(
         total_microseconds = timedelta // td(microseconds=1)
     else:
         name, value = next((n, v) for n, v in numeric.items() if v is not None)
-        total_microseconds = int(value * UNITS[name]["µs_per_unit"])
+        total_microseconds = int(value * UNITS[name].us_per_unit)
 
     is_negative = total_microseconds < 0
     total_microseconds = abs(total_microseconds)
@@ -143,7 +150,7 @@ def duration_string(
     remainder = total_microseconds
 
     for unit, unit_info in UNITS.items():
-        value, remainder = divmod(remainder, unit_info["µs_per_unit"])
+        value, remainder = divmod(remainder, unit_info.us_per_unit)
         values.append([unit, value])
         if unit == precision:
             break
@@ -158,10 +165,11 @@ def duration_string(
     if not values:
         values = [[precision, 0]]
 
-    parts = [f"{e[1]}{UNITS[e[0]]['abbreviation']}" for e in values]
-    result = separator.join(parts)
+    result = separator.join(
+        f"{value}{UNITS[unit].abbreviation}" for unit, value in values
+    )
 
-    has_non_zero_values = any(v[1] for v in values)
+    has_non_zero_values = any(value for _, value in values)
     if is_negative and has_non_zero_values:
         result = "-" + result
 
