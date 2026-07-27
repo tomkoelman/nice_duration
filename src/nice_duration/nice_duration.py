@@ -1,4 +1,5 @@
 from datetime import timedelta as td
+from decimal import Decimal
 from typing import NamedTuple
 
 
@@ -141,7 +142,10 @@ def duration_string(
         total_microseconds = timedelta // td(microseconds=1)
     else:
         name, value = next((n, v) for n, v in numeric.items() if v is not None)
-        total_microseconds = int(value * UNITS[name].us_per_unit)
+        # Convert via Decimal, so that a float that reads as an exact number of
+        # microseconds becomes exactly that: 4.1 * 1000000 is 4099999.9999999995
+        # in binary floating point, which would truncate to one microsecond short.
+        total_microseconds = int(Decimal(str(value)) * UNITS[name].us_per_unit)
 
     is_negative = total_microseconds < 0
     total_microseconds = abs(total_microseconds)
