@@ -131,11 +131,7 @@ def duration_string(
         trailing_zeroes = True
 
     if timedelta is not None:
-        total_microseconds = (
-            timedelta.days * 86_400 * 1_000_000
-            + timedelta.seconds * 1_000_000
-            + timedelta.microseconds
-        )
+        total_microseconds = timedelta // td(microseconds=1)
     else:
         name, value = next((n, v) for n, v in numeric.items() if v is not None)
         total_microseconds = int(value * UNITS[name]["µs_per_unit"])
