@@ -62,4 +62,4 @@ duration_string(timedelta=delta, separator=" ")  # "3h 20m"
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT No Attribution License (MIT-0). See [LICENSE](LICENSE).
