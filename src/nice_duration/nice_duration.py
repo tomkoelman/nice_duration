@@ -1,5 +1,6 @@
 from datetime import timedelta as td
 from decimal import Decimal
+from math import isfinite
 from typing import NamedTuple
 
 
@@ -87,8 +88,9 @@ def duration_string(
         Nice duration string
 
     Raises:
-        TypeError: If invalid input types are provided, multiple time inputs are
-                  given, no time input is provided, or invalid precision unit is specified
+        TypeError: If invalid input types are provided, a numeric value is not
+                  finite, multiple time inputs are given, no time input is
+                  provided, or invalid precision unit is specified
 
     Examples:
         duration_string(timedelta=td(hours=3, minutes=20)) -> "3h20m"
@@ -118,6 +120,8 @@ def duration_string(
             raise TypeError(
                 f"Expected int or float for {name}, got {type(value).__name__}"
             )
+        if isinstance(value, float) and not isfinite(value):
+            raise TypeError(f"Expected a finite number for {name}, got {value}")
 
     provided = [p for p in (timedelta, *numeric.values()) if p is not None]
     if not provided:

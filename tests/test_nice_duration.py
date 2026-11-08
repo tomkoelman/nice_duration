@@ -216,6 +216,20 @@ def test_invalid_timedelta_type_error():
         ds(timedelta="not a timedelta")
 
 
+def test_non_finite_values_rejected():
+    """Infinities and NaN are floats, so only an explicit check keeps them from
+    reaching int(), which raises OverflowError or ValueError instead."""
+    for value in (float("inf"), float("-inf"), float("nan")):
+        with pytest.raises(TypeError):
+            ds(seconds=value)
+
+        with pytest.raises(TypeError):
+            ds(milliseconds=value)
+
+        with pytest.raises(TypeError):
+            ds(microseconds=value)
+
+
 def test_boolean_values_rejected():
     """Boolean values should be rejected even though bool is a subclass of int."""
     with pytest.raises(TypeError):
